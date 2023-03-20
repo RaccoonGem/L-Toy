@@ -36,11 +36,11 @@ function buildRules () {
     ruleI = [];
     ruleO = [];
     for (let f = 0; f < userRules.length; f++) {
-        if (userRules[f] == /[A-z]+ [A-z]+/.exec(userRules[f])) {
+        if (userRules[f] == /[A-z0-9]+ [A-z0-9]+/.exec(userRules[f])) {
             ruleI.push(userRules[f].split(' ')[0]);
             ruleO.push(userRules[f].split(' ')[1]);
         }
-        if (userRules[f] == /[A-z]+/.exec(userRules[f])) {
+        if (userRules[f] == /[A-z0-9]+/.exec(userRules[f])) {
             ruleI.push(userRules[f]);
             ruleO.push("");
         }
@@ -55,11 +55,11 @@ function runRules () {
         nextStage = stage[f];
         for (let r = 0; r < ruleI.length; r++) {
             rule = new RegExp(ruleI[r], "g");
-            nextStage = nextStage.replace(rule, "@" + r + "@");
+            nextStage = nextStage.replace(rule, "(" + r + ")");
         }
         for (let r = 0; r < ruleI.length; r++) {
             rule = new RegExp(ruleI[r], "g");
-            nextStage = nextStage.replace(new RegExp("@" + r + "@", "g"), ruleO[r]);
+            nextStage = nextStage.replace(new RegExp("[(]" + r + "[)]", "g"), ruleO[r]);
         }
         stage.push(nextStage);
     }
@@ -211,14 +211,14 @@ document.addEventListener('keydown', (event) => {
         }
         if (keyName == "Backspace") {
             userRules[selRule] = userRules[selRule].slice(0, userRules[selRule].length - 1);
-        } else if (keyName == " " || (keyName == /[A-z]/.exec(keyName) && keyName == /\w/.exec(keyName))) {
+        } else if (keyName == " " || (keyName == /[A-z0-9]/.exec(keyName) && keyName == /\w/.exec(keyName))) {
             userRules[selRule] += keyName;
         }
     } else {
         if (keyName == "Backspace") {
             startString = startString.slice(0, startString.length - 1);
         }
-        if (keyName == " " || (keyName == /[A-z]/.exec(keyName) && keyName == /\w/.exec(keyName))) {
+        if (keyName == " " || (keyName == /[A-z0-9]/.exec(keyName) && keyName == /\w/.exec(keyName))) {
             startString += keyName;
         }
     }
@@ -314,7 +314,7 @@ function draw () {
     ctx.strokeStyle = "#AFAFAF";
     for (let f = 0; f < 8; f++) {
         let r = f + topRule;
-        if (userRules[r] != /[A-z]+ [A-z]+/.exec(userRules[r]) && userRules[r] != /[A-z]+/.exec(userRules[r])) {
+        if (userRules[r] != /[A-z0-9]+ [A-z0-9]+/.exec(userRules[r]) && userRules[r] != /[A-z0-9]+/.exec(userRules[r])) {
             ctx.beginPath();
             ctx.moveTo(440, (f + 2.5) * 40);
             ctx.lineTo(620, (f + 3.5) * 40);
