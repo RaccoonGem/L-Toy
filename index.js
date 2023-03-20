@@ -54,7 +54,7 @@ function runRules () {
     for (let f = 0; f < runCount; f++) {
         nextStage = stage[f];
         for (let r = 0; r < ruleI.length; r++) {
-            rule = new RegExp(ruleI[r], "g");
+            rule = new RegExp(ruleI[r] + "(?!\\d*[)])", "g");
             nextStage = nextStage.replace(rule, "(" + r + ")");
         }
         for (let r = 0; r < ruleI.length; r++) {
